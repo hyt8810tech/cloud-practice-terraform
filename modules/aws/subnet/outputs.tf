@@ -11,5 +11,5 @@ output "id_private_subnet_1a" {
 }
 
 output "id_private_subnet_1c" {
-  value = aws_subnet.private_1c
+  value = aws_subnet.private_1c.id
 }
