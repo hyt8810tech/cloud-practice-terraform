@@ -37,4 +37,21 @@ module "ecr" {
   env    = local.env
 }
 
+module "secrets_manager" {
+  source = "../modules/aws/secrets_manager"
+  env    = local.env
+}
 
+module "sqs" {
+  source     = "../modules/aws/sqs"
+  env        = local.env
+  account_id = local.account_id
+}
+
+module "ses" {
+  source = "../modules/aws/ses"
+  env    = local.env
+  cloud_pratica = {
+    domain = local.base_host
+  }
+}

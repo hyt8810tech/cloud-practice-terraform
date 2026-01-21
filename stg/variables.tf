@@ -2,6 +2,7 @@ locals {
   env        = "stg"
   account_id = "165115313503"
   region     = "ap-northeast-1"
+  base_host  = "stg.8810-infra.click"
   public_subnet_ids = [
     module.subnet.id_public_subnet_1a,
     module.subnet.id_public_subnet_1c,
