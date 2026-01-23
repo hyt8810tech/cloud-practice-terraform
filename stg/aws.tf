@@ -61,3 +61,17 @@ module "iam_role" {
   env    = local.env
 }
 
+module "ec2" {
+  source           = "../modules/aws/ec2"
+  env              = local.env
+  public_subnet_id = module.subnet.id_public_subnet_1a
+  bastion = {
+    iam_instance_profile = module.iam_role.name_cp_bastion
+    security_group_id    = module.security_group.id_bastion
+  }
+  nat_1a = {
+    iam_instance_profile = module.iam_role.name_cp_nat
+    security_group_id    = module.security_group.id_nat
+  }
+}
+
