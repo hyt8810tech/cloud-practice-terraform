@@ -76,21 +76,21 @@ module "ec2" {
 }
 
 module "rds_cp" {
-  env                = local.env
-  source             = "../modules/aws/rds_unit"
-  identifier         = "cloud-pratica-${local.env}"
-  db_name            = "slack_metrics"
-  engine_version     = "16.8"
-  instance_class     = "db.t3.micro"
-  security_group_ids = [module.security_group.id_db]
-  private_subnet_ids = local.private_subnet_ids
-  subnet_group_name = "cp-db-subnet-group-${local.env}"
-  family = "postgres16"
+  env                  = local.env
+  source               = "../modules/aws/rds_unit"
+  identifier           = "cloud-pratica-${local.env}"
+  db_name              = "slack_metrics"
+  engine_version       = "16.8"
+  instance_class       = "db.t3.micro"
+  security_group_ids   = [module.security_group.id_db]
+  private_subnet_ids   = local.private_subnet_ids
+  subnet_group_name    = "cp-db-subnet-group-${local.env}"
+  family               = "postgres16"
   parameter_group_name = "cp-db-parameter-group-${local.env}"
 }
 
 module "acm_cloud_pratica_com_ap_northeast_1" {
-  source = "../modules/aws/acm_unit"
+  source      = "../modules/aws/acm_unit"
   domain_name = "*.${local.base_host}"
   providers = {
     aws = aws
@@ -98,9 +98,14 @@ module "acm_cloud_pratica_com_ap_northeast_1" {
 }
 
 module "acm_cloud_pratica_com_us_east_1" {
-  source = "../modules/aws/acm_unit"
+  source      = "../modules/aws/acm_unit"
   domain_name = "*.${local.base_host}"
   providers = {
     aws = aws.us_east_1
   }
+}
+
+module "ecs" {
+  source = "../modules/aws/ecs"
+  env    = local.env
 }
