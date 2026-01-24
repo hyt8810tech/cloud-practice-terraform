@@ -5,3 +5,7 @@ output "id_bastion" {
 output "id_nat" {
   value = aws_security_group.nat.id
 }
+
+output "id_db" {
+  value = aws_security_group.db.id
+}
