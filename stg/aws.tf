@@ -66,11 +66,11 @@ module "ec2" {
   env              = local.env
   public_subnet_id = module.subnet.id_public_subnet_1a
   bastion = {
-    iam_instance_profile = module.iam_role.name_cp_bastion
+    iam_instance_profile = module.iam_role.instance_profile_cp_bastion
     security_group_id    = module.security_group.id_bastion
   }
   nat_1a = {
-    iam_instance_profile = module.iam_role.name_cp_nat
+    iam_instance_profile = module.iam_role.instance_profile_cp_nat
     security_group_id    = module.security_group.id_nat
   }
 }
@@ -109,3 +109,30 @@ module "ecs" {
   source = "../modules/aws/ecs"
   env    = local.env
 }
+
+module "ecs_task_definition" {
+  source                               = "../modules/aws/ecs_task_definition"
+  env                                  = local.env
+  ecs_task_role_arn_slack_metrics      = module.iam_role.role_arn_cp_slack_metrics_backend
+  ecs_task_role_arn_db_migrator        = module.iam_role.role_arn_cp_db_migrator
+  ecs_task_execution_role_arn          = module.iam_role.role_arn_ecs_task_execution
+  arn_cp_config_bucket                 = "arn:aws:s3:::cp-hayato-config-stg"
+  ecr_url_slack_metrics                = "${module.ecr.url_slack_metrics}:0fc3124"
+  secrets_manager_arn_db_main_instance = module.secrets_manager.arn_db_main_instance
+  ecr_url_db_migrator                  = "${module.ecr.url_db_migrator}:c6db94b"
+  ecs_task_specs = {
+    slack_metrics_api = {
+      cpu    = 256
+      memory = 512
+    }
+    slack_metrics_batch = {
+      cpu    = 256
+      memory = 512
+    }
+    db_migrator = {
+      cpu    = 256
+      memory = 512
+    }
+  }
+}
+
