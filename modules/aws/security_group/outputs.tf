@@ -9,3 +9,7 @@ output "id_nat" {
 output "id_db" {
   value = aws_security_group.db.id
 }
+
+output "id_slack_metrics_backend" {
+  value = aws_security_group.slack_metrics_backend.id
+}
