@@ -114,7 +114,7 @@ module "ecs" {
     capacity_provider  = "FARGATE_SPOT"
     target_group_arn   = "arn:aws:elasticloadbalancing:ap-northeast-1:165115313503:targetgroup/slack-metrics-api-stg/2715b56de9575c8a"
     security_group_ids = [module.security_group.id_slack_metrics_backend]
-    subnet_ids = local.private_subnet_ids
+    subnet_ids         = local.private_subnet_ids
   }
 }
 
@@ -141,5 +141,26 @@ module "ecs_task_definition" {
       cpu    = 256
       memory = 512
     }
+  }
+}
+
+module "event_bridge_scheduler" {
+  source             = "../modules/aws/event_bridge_scheduler"
+  env                = local.env
+  private_subnet_ids = local.private_subnet_ids
+  slack_metrics = {
+    iam_role_arn                             = module.iam_role.role_arn_cp_scheduler_slack_metrics
+    ecs_cluster_arn                          = module.ecs.ecs_cluster_arn_cloud_pratica_backend
+    security_group_id                        = module.security_group.id_slack_metrics_backend
+    ecs_task_definition_arn_without_revision = module.ecs_task_definition.arn_without_revision_slack_metrics_batch
+  }
+  cost_cutter = {
+    enable       = true
+    iam_role_arn = module.iam_role.role_arn_cp_scheduler_cost_cutter
+    ec2_instance_ids = [
+      module.ec2.id_nat_1a,
+      module.ec2.id_bastion,
+    ]
+    ecs_cluster_arn_cloud_pratica_backend = module.ecs.ecs_cluster_arn_cloud_pratica_backend
   }
 }

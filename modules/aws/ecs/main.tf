@@ -106,4 +106,3 @@ resource "aws_appautoscaling_policy" "slack_metrics_api_memory" {
   }
 }
 
-

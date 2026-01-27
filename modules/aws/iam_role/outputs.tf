@@ -21,3 +21,7 @@ output "role_arn_cp_db_migrator" {
 output "role_arn_cp_scheduler_slack_metrics" {
   value = aws_iam_role.cp_scheduler_slack_metrics.arn
 }
+
+output "role_arn_cp_scheduler_cost_cutter" {
+  value = aws_iam_role.cp_scheduler_cost_cutter.arn
+}
