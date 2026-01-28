@@ -3,6 +3,7 @@ locals {
   account_id = "165115313503"
   region     = "ap-northeast-1"
   base_host  = "stg.8810-infra.click"
+  slack_metrics_api_host = "sm-api.${local.base_host}"
   public_subnet_ids = [
     module.subnet.id_public_subnet_1a,
     module.subnet.id_public_subnet_1c,
