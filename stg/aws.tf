@@ -186,6 +186,20 @@ module "alb" {
 module "s3" {
   source = "../modules/aws/s3"
   env = local.env
-  cloudfront_distribution_arn = "arn:aws:cloudfront::165115313503:distribution/EMYKUQB4JTLRK"
+  slack_metrics = {
+    cloudfront_distribution_arn = module.cloudfront.arn_slack_metrics
+  }
 }
 
+
+module "cloudfront" {
+  source = "../modules/aws/cloudfront"
+  env = local.env
+  slack_metrics = {
+    aliases = ["sm.${local.base_host}"]
+    acm_certificate_arn = module.acm_cloud_pratica_com_us_east_1.arn_certificate
+    amplify_domain_name = local.amplify_domain_name_slack_metrics
+    s3_domain_name = module.s3.domain_name_slack_metrics
+  }
+}
+    

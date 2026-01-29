@@ -4,7 +4,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 6.28.0" // s3 public module使用のため6.28.0~に修正
+      version = "~> 6.5.0" // 6.5.0 以上 6.6.0 未満 を許容
     }
   }
 }
