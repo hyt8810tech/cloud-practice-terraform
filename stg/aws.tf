@@ -183,3 +183,9 @@ module "alb" {
   }
 }
 
+module "s3" {
+  source = "../modules/aws/s3"
+  env = local.env
+  cloudfront_distribution_arn = "arn:aws:cloudfront::165115313503:distribution/EMYKUQB4JTLRK"
+}
+
