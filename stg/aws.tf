@@ -175,17 +175,17 @@ module "alb" {
   source = "../modules/aws/alb"
   env    = local.env
   cloud_pratica = {
-    security_group_ids = [module.security_group.id_alb]
-    subnet_ids        = local.public_subnet_ids
+    security_group_ids                 = [module.security_group.id_alb]
+    subnet_ids                         = local.public_subnet_ids
     arn_target_group_slack_metrics_api = module.target_group.arn_slack_metrics_api
-    slack_metrics_api_host = local.slack_metrics_api_host
-    arn_certificate = module.acm_cloud_pratica_com_ap_northeast_1.arn_certificate
+    slack_metrics_api_host             = local.slack_metrics_api_host
+    arn_certificate                    = module.acm_cloud_pratica_com_ap_northeast_1.arn_certificate
   }
 }
 
 module "s3" {
   source = "../modules/aws/s3"
-  env = local.env
+  env    = local.env
   slack_metrics = {
     cloudfront_distribution_arn = module.cloudfront.arn_slack_metrics
   }
@@ -194,12 +194,46 @@ module "s3" {
 
 module "cloudfront" {
   source = "../modules/aws/cloudfront"
-  env = local.env
+  env    = local.env
   slack_metrics = {
-    aliases = ["sm.${local.base_host}"]
+    aliases             = ["sm.${local.base_host}"]
     acm_certificate_arn = module.acm_cloud_pratica_com_us_east_1.arn_certificate
     amplify_domain_name = local.amplify_domain_name_slack_metrics
-    s3_domain_name = module.s3.domain_name_slack_metrics
+    s3_domain_name      = module.s3.domain_name_slack_metrics
   }
 }
-    
+
+module "route53" {
+  source    = "../modules/aws/route53_unit"
+  zone_name = local.base_host
+  records = [
+    {
+      name = local.slack_metrics_host
+      type = "A"
+      alias = {
+        name                   = module.cloudfront.domain_name_slack_metrics
+        evaluate_target_health = false
+        zone_id                = module.cloudfront.zone_id_us_east_1
+      }
+    },
+    {
+      name = local.slack_metrics_api_host
+      type = "A"
+      alias = {
+        name                   = "dualstack.${module.alb.dns_name_cloud_pratica}"
+        evaluate_target_health = true
+        zone_id                = module.alb.zone_id_ap_northeast_1
+      }
+    },
+    {
+      name   = module.acm_cloud_pratica_com_ap_northeast_1.validation_record_name
+      values = [module.acm_cloud_pratica_com_ap_northeast_1.validation_record_value]
+      type   = "CNAME"
+      ttl    = 300
+    },
+  ]
+  ses = {
+    enabled     = true
+    dkim_tokens = module.ses.dkim_tokens_cloud_pratica
+  }
+}
