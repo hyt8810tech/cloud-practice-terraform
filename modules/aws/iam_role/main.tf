@@ -1,4 +1,6 @@
-//db-migrator
+/**********************************************************
+db-migrator
+**********************************************************/
 resource "aws_iam_role" "cp_db_migrator" {
   name = "cp-db-migrator-${var.env}"
   assume_role_policy = jsonencode({
@@ -20,7 +22,9 @@ resource "aws_iam_role" "cp_db_migrator" {
   }
 }
 
-//bastion
+/**********************************************************
+bastion
+**********************************************************/
 resource "aws_iam_role" "cp_bastion" {
   assume_role_policy = jsonencode({
     Statement = [{
@@ -48,7 +52,9 @@ resource "aws_iam_instance_profile" "cp_bastion" {
   role = aws_iam_role.cp_bastion.name
 }
 
-//nat
+/**********************************************************
+nat
+**********************************************************/
 resource "aws_iam_role" "cp_nat" {
   assume_role_policy = jsonencode({
     Statement = [{
@@ -76,7 +82,9 @@ resource "aws_iam_instance_profile" "cp_nat" {
   role = aws_iam_role.cp_nat.name
 }
 
-//ecs-task-execution
+/**********************************************************
+ecs-task-execution
+**********************************************************/
 resource "aws_iam_role" "ecs_task_execution" {
   assume_role_policy = jsonencode({
     Statement = [{
@@ -103,7 +111,9 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
 }
 
 
-//slack-metrics-backend
+/**********************************************************
+slack-metrics-backend
+**********************************************************/
 resource "aws_iam_role" "cp_slack_metrics_backend" {
   assume_role_policy = jsonencode({
     Statement = [{
@@ -129,7 +139,9 @@ resource "aws_iam_role_policy_attachment" "cp_slack_metrics_backend" {
   role       = aws_iam_role.cp_slack_metrics_backend.name
 }
 
-//slack-metrics-client
+/**********************************************************
+slack-metrics-client
+**********************************************************/
 resource "aws_iam_role" "cp_slack_metrics_client" {
   assume_role_policy = jsonencode({
     Statement = [{
@@ -153,7 +165,9 @@ resource "aws_iam_role_policy_attachment" "cp_slack_metrics_client" {
 }
 
 
-//cp-scheduler-slack-metrics
+/**********************************************************
+cp-scheduler-slack-metrics
+**********************************************************/
 resource "aws_iam_role" "cp_scheduler_slack_metrics" {
   assume_role_policy = jsonencode({
     Statement = [{
@@ -179,7 +193,9 @@ resource "aws_iam_role_policy_attachment" "cp_scheduler_slack_metrics" {
   role       = aws_iam_role.cp_scheduler_slack_metrics.name
 }
 
-//cp-scheduler-cost-cutter-stg
+/**********************************************************
+cp-scheduler-cost-cutter
+**********************************************************/
 resource "aws_iam_role" "cp_scheduler_cost_cutter" {
   assume_role_policy = jsonencode({
     Statement = [{
@@ -204,7 +220,9 @@ resource "aws_iam_role_policy_attachment" "cp_scheduler_cost_cutter" {
   role       = aws_iam_role.cp_scheduler_cost_cutter.name
 }
 
-//administrator
+/**********************************************************
+administrator
+**********************************************************/
 resource "aws_iam_role" "administrator" {
   assume_role_policy = jsonencode({
     Statement = [{

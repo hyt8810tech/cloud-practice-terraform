@@ -1,10 +1,10 @@
 resource "aws_lb_target_group" "slack_metrics_api" {
+  name                               = "slack-metrics-api-${var.env}"
   deregistration_delay               = "115"
   ip_address_type                    = "ipv4"
   load_balancing_algorithm_type      = "round_robin"
   load_balancing_anomaly_mitigation  = "off"
   load_balancing_cross_zone_enabled  = "use_load_balancer_configuration"
-  name                               = "slack-metrics-api-${var.env}"
   port                               = 80
   protocol                           = "HTTP"
   protocol_version                   = "HTTP1"

@@ -1,4 +1,6 @@
-//cp-alb-tg
+/**********************************************************
+cp-alb
+**********************************************************/
 resource "aws_security_group" "alb_cp" {
   name        = "cp-alb-${var.env}"
   description = "cp-alb-${var.env}"
@@ -24,7 +26,9 @@ resource "aws_vpc_security_group_egress_rule" "alb_cp" {
   ip_protocol       = "-1"
 }
 
-//cp-bastion-stg
+/**********************************************************
+cp-bastion
+**********************************************************/
 resource "aws_security_group" "bastion" {
   description = "cp-bastion-${var.env}"
   name        = "cp-bastion-${var.env}"
@@ -40,14 +44,16 @@ resource "aws_vpc_security_group_egress_rule" "bastion" {
   ip_protocol       = "-1"
 }
 
-//cp-nat-stg
+/**********************************************************
+cp-nat
+**********************************************************/
 resource "aws_security_group" "nat" {
-  description = "cp-nat-stg"
-  name        = "cp-nat-stg"
+  description = "cp-nat-${var.env}"
+  name        = "cp-nat-${var.env}"
   tags = {
-    Name = "cp-nat-stg"
+    Name = "cp-nat-${var.env}"
   }
-  vpc_id = "vpc-07cdfdcd91e7017b9"
+  vpc_id = var.vpc_id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "nat" {
@@ -64,7 +70,9 @@ resource "aws_vpc_security_group_egress_rule" "nat" {
   security_group_id = aws_security_group.nat.id
 }
 
-//cp-slack-metrics-backend-stg
+/**********************************************************
+cp-slack-metrics-backend
+**********************************************************/
 resource "aws_security_group" "slack_metrics_backend" {
   description = "cp-slack-metrics-backend-${var.env}"
   name        = "cp-slack-metrics-backend-${var.env}"
@@ -90,7 +98,9 @@ resource "aws_vpc_security_group_egress_rule" "slack_metrics_backend" {
   security_group_id = aws_security_group.slack_metrics_backend.id
 }
 
-//cp-db-migrator-stg
+/**********************************************************
+cp-db-migrator
+**********************************************************/
 resource "aws_security_group" "db_migrator" {
   description = "cp-db-migrator-${var.env}"
   tags = {
@@ -105,7 +115,9 @@ resource "aws_vpc_security_group_egress_rule" "db_migrator" {
   security_group_id = aws_security_group.db_migrator.id
 }
 
-//cp-db-stg
+/**********************************************************
+cp-db
+**********************************************************/
 resource "aws_security_group" "db" {
   description = "cp-db-${var.env}"
   name        = "cp-db-${var.env}"

@@ -1,4 +1,6 @@
-//secrets-manager-read
+/**********************************************************
+secrets-manager-read
+**********************************************************/
 resource "aws_iam_policy" "secrets_manager_read" {
   description = "secrets-manager-readonly-${var.env}"
   policy = jsonencode({
@@ -15,7 +17,9 @@ resource "aws_iam_policy" "secrets_manager_read" {
   })
 }
 
-//sqs-read-write-stg
+/**********************************************************
+sqs-read-write
+**********************************************************/
 resource "aws_iam_policy" "sqs_read_write" {
   policy = jsonencode({
     Statement = [{
@@ -32,7 +36,9 @@ resource "aws_iam_policy" "sqs_read_write" {
   })
 }
 
-//ses-send-email-stg
+/**********************************************************
+ses-send-email
+**********************************************************/
 resource "aws_iam_policy" "ses_send_email" {
   policy = jsonencode({
     Statement = [{
@@ -47,9 +53,11 @@ resource "aws_iam_policy" "ses_send_email" {
   })
 }
 
-//cloud-watch-logs-write
+/**********************************************************
+cloud-watch-logs-write
+**********************************************************/
 resource "aws_iam_policy" "cloud_watch_logs_write" {
-  name = "cloud-watch-logs-write-stg"
+  name = "cloud-watch-logs-write-${var.env}"
   policy = jsonencode({
     Statement = [{
       Action   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
@@ -59,9 +67,12 @@ resource "aws_iam_policy" "cloud_watch_logs_write" {
     Version = "2012-10-17"
   })
 }
-//ecs-run-task
+
+/**********************************************************
+ecs-run-task
+**********************************************************/
 resource "aws_iam_policy" "ecs_run_task" {
-  name = "ecs-run-task-stg"
+  name = "ecs-run-task-${var.env}"
   policy = jsonencode({
     Statement = [{
       Action   = "ecs:RunTask"
@@ -72,7 +83,9 @@ resource "aws_iam_policy" "ecs_run_task" {
   })
 }
 
-//pass-role-to-ecs-task
+/**********************************************************
+pass-role-to-ecs-task
+**********************************************************/
 resource "aws_iam_policy" "pass_role_to_ecs_task" {
   name = "pass-role-to-ecs-task-stg"
   policy = jsonencode({
@@ -90,7 +103,9 @@ resource "aws_iam_policy" "pass_role_to_ecs_task" {
   })
 }
 
-//batch-submit-job
+/**********************************************************
+batch-submit-job
+**********************************************************/
 resource "aws_iam_policy" "batch_submit_job" {
   name = "batch-submit-job-stg"
   policy = jsonencode({
@@ -103,9 +118,11 @@ resource "aws_iam_policy" "batch_submit_job" {
   })
 }
 
-//lambda-invoke
+/**********************************************************
+lambda-invoke
+**********************************************************/
 resource "aws_iam_policy" "lambda_invoke" {
-  name = "lambda-invoke-stg"
+  name = "lambda-invoke-${var.env}"
   policy = jsonencode({
     Statement = [{
       Action   = ["lambda:InvokeFunction", "lambda:GetFunctionConfiguration"]
@@ -116,10 +133,12 @@ resource "aws_iam_policy" "lambda_invoke" {
   })
 }
 
-//rds-start-stop-stg
+/**********************************************************
+rds-start-stop
+**********************************************************/
 resource "aws_iam_policy" "rds_start_stop" {
   description = null
-  name        = "rds-start-stop-stg"
+  name        = "rds-start-stop-${var.env}"
   path        = "/"
   policy = jsonencode({
     Statement = [{
@@ -129,14 +148,14 @@ resource "aws_iam_policy" "rds_start_stop" {
     }]
     Version = "2012-10-17"
   })
-  tags     = {}
-  tags_all = {}
 }
 
-//ec2-start-stop-stg
+/**********************************************************
+ec2-start-stop
+**********************************************************/
 resource "aws_iam_policy" "ec2_start_stop" {
   description = null
-  name        = "ec2-start-stop-stg"
+  name        = "ec2-start-stop-${var.env}"
   path        = "/"
   policy = jsonencode({
     Statement = [{
@@ -146,14 +165,14 @@ resource "aws_iam_policy" "ec2_start_stop" {
     }]
     Version = "2012-10-17"
   })
-  tags     = {}
-  tags_all = {}
 }
 
-//ecs-write-stg
+/**********************************************************
+ecs-write
+**********************************************************/
 resource "aws_iam_policy" "ecs_write" {
   description = null
-  name        = "ecs-write-stg"
+  name        = "ecs-write-${var.env}"
   path        = "/"
   policy = jsonencode({
     Statement = [{
@@ -163,6 +182,4 @@ resource "aws_iam_policy" "ecs_write" {
     }]
     Version = "2012-10-17"
   })
-  tags     = {}
-  tags_all = {}
 }
