@@ -9,7 +9,7 @@ resource "aws_lb" "cloud_pratica" {
 }
 
 resource "aws_lb_listener_rule" "slack_metrics_api" {
-  listener_arn = "arn:aws:elasticloadbalancing:ap-northeast-1:165115313503:listener/app/cp-alb-stg/345ef107b6d54352/83608ce476cb7234"
+  listener_arn = aws_lb_listener.cp_https.arn
   priority     = 1
   tags = {
     Name = "slack-metrics-api"
@@ -31,7 +31,7 @@ resource "aws_lb_listener_rule" "slack_metrics_api" {
 
 resource "aws_lb_listener" "cp_https" {
   certificate_arn                      = var.cloud_pratica.arn_certificate
-  load_balancer_arn                    = "arn:aws:elasticloadbalancing:ap-northeast-1:165115313503:loadbalancer/app/cp-alb-stg/345ef107b6d54352"
+  load_balancer_arn                    = aws_lb.cloud_pratica.arn
   port                                 = 443
   protocol                             = "HTTPS"
   routing_http_response_server_enabled = true
