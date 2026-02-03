@@ -42,3 +42,11 @@ module "iam_role" {
   source = "../modules/aws/iam_role"
   env    = local.env
 }
+
+module "s3" {
+  source = "../modules/aws/s3"
+  env    = local.env
+#   slack_metrics = {
+#     cloudfront_distribution_arn = module.cloudfront.arn_slack_metrics
+#   }
+}
