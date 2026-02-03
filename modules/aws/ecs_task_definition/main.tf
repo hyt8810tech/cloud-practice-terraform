@@ -114,7 +114,7 @@ resource "aws_ecs_task_definition" "slack_metrics_api" {
 slack-metrics-batch
 **********************************************************/
 resource "aws_ecs_task_definition" "slack_metrics_batch" {
-  family                   = "slack-metrics-batch-stg"
+  family                   = "slack-metrics-batch-${var.env}"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.ecs_task_specs.slack_metrics_batch.cpu
   memory                   = var.ecs_task_specs.slack_metrics_batch.memory

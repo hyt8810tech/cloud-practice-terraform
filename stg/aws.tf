@@ -22,7 +22,7 @@ module "route_table" {
   internet_gateway_id      = module.internet_gateway.id_cloud_pratica
   public_subnet_ids        = local.public_subnet_ids
   private_subnet_ids       = local.private_subnet_ids
-  nat_network_interface_id = "eni-0f31ccb6c490220e6"
+  nat_network_interface_id = module.ec2.network_interface_id_nat_1a
 }
 
 module "security_group" {
@@ -124,7 +124,7 @@ module "ecs_task_definition" {
   ecs_task_role_arn_slack_metrics      = module.iam_role.role_arn_cp_slack_metrics_backend
   ecs_task_role_arn_db_migrator        = module.iam_role.role_arn_cp_db_migrator
   ecs_task_execution_role_arn          = module.iam_role.role_arn_ecs_task_execution
-  arn_cp_config_bucket                 = "arn:aws:s3:::cp-hayato-config-stg"
+  arn_cp_config_bucket                 = module.s3.arn_cp_config_bucket
   ecr_url_slack_metrics                = "${module.ecr.url_slack_metrics}:0fc3124"
   secrets_manager_arn_db_main_instance = module.secrets_manager.arn_db_main_instance
   ecr_url_db_migrator                  = "${module.ecr.url_db_migrator}:c6db94b"

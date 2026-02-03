@@ -87,7 +87,7 @@ resource "aws_iam_policy" "ecs_run_task" {
 pass-role-to-ecs-task
 **********************************************************/
 resource "aws_iam_policy" "pass_role_to_ecs_task" {
-  name = "pass-role-to-ecs-task-stg"
+  name = "pass-role-to-ecs-task-${var.env}"
   policy = jsonencode({
     Statement = [{
       Action = "iam:PassRole"
@@ -107,7 +107,7 @@ resource "aws_iam_policy" "pass_role_to_ecs_task" {
 batch-submit-job
 **********************************************************/
 resource "aws_iam_policy" "batch_submit_job" {
-  name = "batch-submit-job-stg"
+  name = "batch-submit-job-${var.env}"
   policy = jsonencode({
     Statement = [{
       Action   = ["batch:SubmitJob"]

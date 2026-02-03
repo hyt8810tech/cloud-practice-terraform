@@ -40,7 +40,7 @@ resource "aws_cloudfront_distribution" "slack_metrics" {
   origin {
     connection_attempts      = 3
     connection_timeout       = 10
-    domain_name              = "develop.d10goe1cjzjers.amplifyapp.com"
+    domain_name              = var.slack_metrics.amplify_domain_name
     origin_id                = local.origin_id_amplify
     custom_origin_config {
       http_port                = 80
@@ -54,8 +54,8 @@ resource "aws_cloudfront_distribution" "slack_metrics" {
   origin {
     connection_attempts      = 3
     connection_timeout       = 10
-    domain_name              = "cp-slack-metrics-hayato-stg.s3.ap-northeast-1.amazonaws.com"
-    origin_access_control_id = "E1TIE7P1Z390H0"
+    domain_name              = var.slack_metrics.s3_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.s3_slack_metrics.id
     origin_id                = local.origin_id_s3
   }
   restrictions {
