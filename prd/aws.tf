@@ -24,3 +24,10 @@ module "route_table" {
   private_subnet_ids       = local.private_subnet_ids
   nat_network_interface_id = null
 }
+
+module "security_group" {
+  source                     = "../modules/aws/security_group"
+  env                        = local.env
+  vpc_id                     = module.vpc.id_cloud_pratica
+  private_subnet_cidr_blocks = local.private_subnet_cidr_blocks
+}
