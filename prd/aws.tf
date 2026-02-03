@@ -37,3 +37,8 @@ module "route53_cloud_pratica_com" {
   zone_name = local.base_host
   records   = []
 }
+
+module "iam_role" {
+  source = "../modules/aws/iam_role"
+  env    = local.env
+}
