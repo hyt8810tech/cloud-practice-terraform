@@ -73,3 +73,8 @@ module "ses" {
     domain = local.base_host
   }
 }
+
+module "secrets_manager" {
+  source = "../modules/aws/secrets_manager"
+  env    = local.env
+}
