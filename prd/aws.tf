@@ -36,6 +36,10 @@ module "route53_cloud_pratica_com" {
   source    = "../modules/aws/route53_unit"
   zone_name = local.base_host
   records   = []
+  ses = {
+    enable      = true
+    dkim_tokens = module.ses.dkim_tokens_cloud_pratica
+  }
 }
 
 module "iam_role" {
@@ -46,9 +50,9 @@ module "iam_role" {
 module "s3" {
   source = "../modules/aws/s3"
   env    = local.env
-#   slack_metrics = {
-#     cloudfront_distribution_arn = module.cloudfront.arn_slack_metrics
-#   }
+  #   slack_metrics = {
+  #     cloudfront_distribution_arn = module.cloudfront.arn_slack_metrics
+  #   }
 }
 
 module "ecr" {
@@ -60,4 +64,12 @@ module "sqs" {
   source     = "../modules/aws/sqs"
   env        = local.env
   account_id = local.account_id
+}
+
+module "ses" {
+  source = "../modules/aws/ses"
+  env    = local.env
+  cloud_pratica = {
+    domain = local.base_host
+  }
 }

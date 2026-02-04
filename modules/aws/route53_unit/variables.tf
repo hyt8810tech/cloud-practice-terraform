@@ -18,11 +18,11 @@ variable "records" {
 
 variable "ses" {
   type = object({
-    enabled = bool
+    enable = bool
     dkim_tokens = list(string)
   })
   default = {
-    enabled = false
+    enable = false
     dkim_tokens = []
   }
 }

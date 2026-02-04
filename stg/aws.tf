@@ -233,7 +233,7 @@ module "route53" {
     },
   ]
   ses = {
-    enabled     = true
+    enable      = true
     dkim_tokens = module.ses.dkim_tokens_cloud_pratica
   }
 }

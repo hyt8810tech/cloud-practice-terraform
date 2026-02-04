@@ -20,7 +20,7 @@ resource "aws_route53_record" "record" {
 }
 
 resource "aws_route53_record" "ses_mail_txt" {
-  count   = var.ses.enabled ? 1 : 0
+  count   = var.ses.enable ? 1 : 0
   records = ["v=spf1 include:amazonses.com ~all"]
   ttl     = 300
   type    = "TXT"
@@ -29,7 +29,7 @@ resource "aws_route53_record" "ses_mail_txt" {
 }
 
 resource "aws_route53_record" "ses_mail_mx" {
-  count   = var.ses.enabled ? 1 : 0
+  count   = var.ses.enable ? 1 : 0
   name    = "mail.${var.zone_name}"
   records = ["10 feedback-smtp.ap-northeast-1.amazonses.com"]
   ttl     = 300
@@ -39,7 +39,7 @@ resource "aws_route53_record" "ses_mail_mx" {
 
 
 resource "aws_route53_record" "ses_mail_dmarc" {
-  count   = var.ses.enabled ? 1 : 0
+  count   = var.ses.enable ? 1 : 0
   name    = "_dmarc.${var.zone_name}"
   records = ["v=DMARC1; p=none;"]
   ttl     = 300
@@ -48,7 +48,7 @@ resource "aws_route53_record" "ses_mail_dmarc" {
 }
 
 resource "aws_route53_record" "ses_mail_cname" {
-  count   = var.ses.enabled ? 3 : 0
+  count   = var.ses.enable ? 3 : 0
   name    = "${element(var.ses.dkim_tokens, count.index)}._domainkey.${var.zone_name}"
   records = ["${element(var.ses.dkim_tokens, count.index)}.dkim.amazonses.com"]
   ttl     = 1800
