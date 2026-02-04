@@ -50,3 +50,14 @@ module "s3" {
 #     cloudfront_distribution_arn = module.cloudfront.arn_slack_metrics
 #   }
 }
+
+module "ecr" {
+  source = "../modules/aws/ecr"
+  env    = local.env
+}
+
+module "sqs" {
+  source     = "../modules/aws/sqs"
+  env        = local.env
+  account_id = local.account_id
+}
