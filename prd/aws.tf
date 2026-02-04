@@ -35,7 +35,13 @@ module "security_group" {
 module "route53_cloud_pratica_com" {
   source    = "../modules/aws/route53_unit"
   zone_name = local.base_host
-  records   = []
+  records = [{
+    name   = module.acm_cloud_pratica_com_ap_northeast_1.validation_record_name
+    values = [module.acm_cloud_pratica_com_ap_northeast_1.validation_record_value]
+    type   = "CNAME"
+    ttl    = 300
+    },
+  ]
   ses = {
     enable      = true
     dkim_tokens = module.ses.dkim_tokens_cloud_pratica
@@ -77,4 +83,20 @@ module "ses" {
 module "secrets_manager" {
   source = "../modules/aws/secrets_manager"
   env    = local.env
+}
+
+module "acm_cloud_pratica_com_ap_northeast_1" {
+  source      = "../modules/aws/acm_unit"
+  domain_name = "*.${local.base_host}"
+  providers = {
+    aws = aws
+  }
+}
+
+module "acm_cloud_pratica_com_us_east_1" {
+  source      = "../modules/aws/acm_unit"
+  domain_name = "*.${local.base_host}"
+  providers = {
+    aws = aws.us_east_1
+  }
 }
