@@ -22,7 +22,7 @@ module "route_table" {
   internet_gateway_id      = module.internet_gateway.id_cloud_pratica
   public_subnet_ids        = local.public_subnet_ids
   private_subnet_ids       = local.private_subnet_ids
-  nat_network_interface_id = null
+  nat_network_interface_id = module.ec2.network_interface_id_nat_1a
 }
 
 module "security_group" {
@@ -98,5 +98,21 @@ module "acm_cloud_pratica_com_us_east_1" {
   domain_name = "*.${local.base_host}"
   providers = {
     aws = aws.us_east_1
+  }
+}
+
+module "ec2" {
+  source           = "../modules/aws/ec2"
+  env              = local.env
+  public_subnet_id = module.subnet.id_public_subnet_1a
+  bastion = {
+    ami_id               = "ami-016675faa26f97391"// stg環境で構築した踏み台サーバのAMI ID
+    iam_instance_profile = module.iam_role.instance_profile_cp_bastion
+    security_group_id    = module.security_group.id_bastion
+  }
+  nat_1a = {
+    ami_id               = "ami-0e7d55a65016b3c18"// stg環境で構築したNATインスタンスのAMI ID
+    iam_instance_profile = module.iam_role.instance_profile_cp_nat
+    security_group_id    = module.security_group.id_nat
   }
 }
