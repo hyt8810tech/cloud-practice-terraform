@@ -116,3 +116,17 @@ module "ec2" {
     security_group_id    = module.security_group.id_nat
   }
 }
+
+module "rds_cp" {
+  env                  = local.env
+  source               = "../modules/aws/rds_unit"
+  identifier           = "cloud-pratica-${local.env}"
+  db_name              = "slack_metrics"
+  engine_version       = "16.8"
+  instance_class       = "db.t3.micro"
+  security_group_ids   = [module.security_group.id_db]
+  private_subnet_ids   = local.private_subnet_ids
+  subnet_group_name    = "cp-db-subnet-group-${local.env}"
+  family               = "postgres16"
+  parameter_group_name = "cp-db-parameter-group-${local.env}"
+}
