@@ -130,3 +130,16 @@ module "rds_cp" {
   family               = "postgres16"
   parameter_group_name = "cp-db-parameter-group-${local.env}"
 }
+
+module "ecs" {
+  source = "../modules/aws/ecs"
+  env    = local.env
+  slack_metrics_api = {
+    name               = "slack-metrics-api-${local.env}"
+    task_definition    = ""
+    capacity_provider  = "FARGATE_SPOT"
+    target_group_arn   = ""
+    security_group_ids = [module.security_group.id_slack_metrics_backend]
+    subnet_ids         = local.private_subnet_ids
+  }
+}
