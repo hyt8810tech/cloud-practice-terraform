@@ -40,7 +40,7 @@ module "route53_cloud_pratica_com" {
     values = [module.acm_cloud_pratica_com_ap_northeast_1.validation_record_value]
     type   = "CNAME"
     ttl    = 300
-    },{
+    }, {
     name = local.slack_metrics_api_host
     type = "A"
     alias = {
@@ -48,7 +48,16 @@ module "route53_cloud_pratica_com" {
       evaluate_target_health = true
       zone_id                = module.alb.zone_id_ap_northeast_1
     }
+    }, {
+    name = local.slack_metrics_host
+    type = "A"
+    alias = {
+      name                   = module.cloudfront.domain_name_slack_metrics
+      evaluate_target_health = false
+      zone_id                = module.cloudfront.zone_id_us_east_1
     }
+    }
+
   ]
   ses = {
     enable      = true
@@ -64,9 +73,9 @@ module "iam_role" {
 module "s3" {
   source = "../modules/aws/s3"
   env    = local.env
-  #   slack_metrics = {
-  #     cloudfront_distribution_arn = module.cloudfront.arn_slack_metrics
-  #   }
+  slack_metrics = {
+    cloudfront_distribution_arn = module.cloudfront.arn_slack_metrics
+  }
 }
 
 module "ecr" {
@@ -214,5 +223,16 @@ module "event_bridge_scheduler" {
       module.ec2.id_bastion,
     ]
     ecs_cluster_arn_cloud_pratica_backend = module.ecs.ecs_cluster_arn_cloud_pratica_backend
+  }
+}
+
+module "cloudfront" {
+  source = "../modules/aws/cloudfront"
+  env    = local.env
+  slack_metrics = {
+    aliases             = ["sm.${local.base_host}"]
+    acm_certificate_arn = module.acm_cloud_pratica_com_us_east_1.arn_certificate
+    amplify_domain_name = local.amplify_domain_name_slack_metrics
+    s3_domain_name      = module.s3.domain_name_slack_metrics
   }
 }
