@@ -169,3 +169,9 @@ module "ecs_task_definition" {
     }
   }
 }
+
+module "target_group" {
+  source = "../modules/aws/target_group"
+  env    = local.env
+  vpc_id = module.vpc.id_cloud_pratica
+}
