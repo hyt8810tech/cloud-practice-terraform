@@ -136,9 +136,9 @@ module "ecs" {
   env    = local.env
   slack_metrics_api = {
     name               = "slack-metrics-api-${local.env}"
-    task_definition    = ""
+    task_definition    = module.ecs_task_definition.arn_slack_metrics_api
     capacity_provider  = "FARGATE_SPOT"
-    target_group_arn   = ""
+    target_group_arn   = module.target_group.arn_slack_metrics_api
     security_group_ids = [module.security_group.id_slack_metrics_backend]
     subnet_ids         = local.private_subnet_ids
   }
@@ -174,4 +174,16 @@ module "target_group" {
   source = "../modules/aws/target_group"
   env    = local.env
   vpc_id = module.vpc.id_cloud_pratica
+}
+
+module "alb" {
+  source = "../modules/aws/alb"
+  env    = local.env
+  cloud_pratica = {
+    security_group_ids                 = [module.security_group.id_alb]
+    subnet_ids                         = local.public_subnet_ids
+    arn_target_group_slack_metrics_api = module.target_group.arn_slack_metrics_api
+    slack_metrics_api_host             = local.slack_metrics_api_host
+    arn_certificate                    = module.acm_cloud_pratica_com_ap_northeast_1.arn_certificate
+  }
 }
