@@ -40,7 +40,15 @@ module "route53_cloud_pratica_com" {
     values = [module.acm_cloud_pratica_com_ap_northeast_1.validation_record_value]
     type   = "CNAME"
     ttl    = 300
-    },
+    },{
+    name = local.slack_metrics_api_host
+    type = "A"
+    alias = {
+      name                   = "dualstack.${module.alb.dns_name_cloud_pratica}"
+      evaluate_target_health = true
+      zone_id                = module.alb.zone_id_ap_northeast_1
+    }
+    }
   ]
   ses = {
     enable      = true
