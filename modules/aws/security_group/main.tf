@@ -102,6 +102,7 @@ resource "aws_vpc_security_group_egress_rule" "slack_metrics_backend" {
 cp-db-migrator
 **********************************************************/
 resource "aws_security_group" "db_migrator" {
+  name        = "cp-db-migrator-${var.env}"
   description = "cp-db-migrator-${var.env}"
   tags = {
     Name = "cp-db-migrator-${var.env}"

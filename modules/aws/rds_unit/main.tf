@@ -18,6 +18,7 @@ resource "aws_db_instance" "main" {
   db_name                             = var.db_name
   engine_version                      = var.engine_version
   instance_class                      = var.instance_class
+  password                            = random_password.db.result
   username                            = "postgres"
   ca_cert_identifier                  = "rds-ca-rsa2048-g1"
   performance_insights_enabled        = true
@@ -30,7 +31,12 @@ resource "aws_db_instance" "main" {
   vpc_security_group_ids              = var.security_group_ids
   db_subnet_group_name                = aws_db_subnet_group.subnet_group.name
   parameter_group_name                = aws_db_parameter_group.parameter_group.name
-
+  lifecycle {
+    ignore_changes = [password]
+  }
 }
 
-
+resource "random_password" "db" {
+  length  = 25
+  special = false
+}

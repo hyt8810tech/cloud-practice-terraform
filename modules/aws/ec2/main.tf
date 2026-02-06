@@ -24,7 +24,7 @@ nat
 **********************************************************/
 resource "aws_instance" "nat_1a" {
   tags = {
-    Name = "cp-nat-${var.env}"
+    Name = "cp-nat-1a-${var.env}"
   }
   ami                                  = var.nat_1a.ami_id
   iam_instance_profile                 = var.nat_1a.iam_instance_profile
