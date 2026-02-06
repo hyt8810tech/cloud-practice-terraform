@@ -119,7 +119,7 @@ resource "aws_ecs_task_definition" "slack_metrics_batch" {
   cpu                      = var.ecs_task_specs.slack_metrics_batch.cpu
   memory                   = var.ecs_task_specs.slack_metrics_batch.memory
   execution_role_arn       = var.ecs_task_execution_role_arn
-  task_role_arn = var.ecs_task_role_arn_slack_metrics
+  task_role_arn            = var.ecs_task_role_arn_slack_metrics
   network_mode             = "awsvpc"
 
   container_definitions = jsonencode([{
@@ -181,11 +181,11 @@ resource "aws_ecs_task_definition" "db_migrator" {
   cpu                      = var.ecs_task_specs.db_migrator.cpu
   memory                   = var.ecs_task_specs.db_migrator.memory
   execution_role_arn       = var.ecs_task_execution_role_arn
-  task_role_arn = var.ecs_task_role_arn_db_migrator
+  task_role_arn            = var.ecs_task_role_arn_db_migrator
   network_mode             = "awsvpc"
 
   container_definitions = jsonencode([{
-    name = "app"
+    name        = "app"
     environment = []
     environmentFiles = [{
       type  = "s3"
