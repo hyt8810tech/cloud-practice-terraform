@@ -19,5 +19,6 @@ variable "private_subnet_ids" {
 }
 
 variable "nat_network_interface_id" {
-  type = string
+  type    = string
+  default = null
 }

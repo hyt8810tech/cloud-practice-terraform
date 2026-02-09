@@ -22,7 +22,7 @@ module "route_table" {
   internet_gateway_id      = module.internet_gateway.id_cloud_pratica
   public_subnet_ids        = local.public_subnet_ids
   private_subnet_ids       = local.private_subnet_ids
-  nat_network_interface_id = module.ec2.network_interface_id_nat_1a
+  #nat_network_interface_id = module.ec2.network_interface_id_nat_1a
 }
 
 module "security_group" {
@@ -61,19 +61,19 @@ module "iam_role" {
   env    = local.env
 }
 
-module "ec2" {
-  source           = "../modules/aws/ec2"
-  env              = local.env
-  public_subnet_id = module.subnet.id_public_subnet_1a
-  bastion = {
-    iam_instance_profile = module.iam_role.instance_profile_cp_bastion
-    security_group_id    = module.security_group.id_bastion
-  }
-  nat_1a = {
-    iam_instance_profile = module.iam_role.instance_profile_cp_nat
-    security_group_id    = module.security_group.id_nat
-  }
-}
+# module "ec2" {
+#   source           = "../modules/aws/ec2"
+#   env              = local.env
+#   public_subnet_id = module.subnet.id_public_subnet_1a
+#   bastion = {
+#     iam_instance_profile = module.iam_role.instance_profile_cp_bastion
+#     security_group_id    = module.security_group.id_bastion
+#   }
+#   nat_1a = {
+#     iam_instance_profile = module.iam_role.instance_profile_cp_nat
+#     security_group_id    = module.security_group.id_nat
+#   }
+# }
 
 module "rds_cp" {
   env                  = local.env
@@ -158,8 +158,8 @@ module "event_bridge_scheduler" {
     enable       = true
     iam_role_arn = module.iam_role.role_arn_cp_scheduler_cost_cutter
     ec2_instance_ids = [
-      module.ec2.id_nat_1a,
-      module.ec2.id_bastion,
+      #module.ec2.id_nat_1a,
+      #module.ec2.id_bastion,
     ]
     ecs_cluster_arn_cloud_pratica_backend = module.ecs.ecs_cluster_arn_cloud_pratica_backend
   }
@@ -171,17 +171,17 @@ module "target_group" {
   vpc_id = module.vpc.id_cloud_pratica
 }
 
-module "alb" {
-  source = "../modules/aws/alb"
-  env    = local.env
-  cloud_pratica = {
-    security_group_ids                 = [module.security_group.id_alb]
-    subnet_ids                         = local.public_subnet_ids
-    arn_target_group_slack_metrics_api = module.target_group.arn_slack_metrics_api
-    slack_metrics_api_host             = local.slack_metrics_api_host
-    arn_certificate                    = module.acm_cloud_pratica_com_ap_northeast_1.arn_certificate
-  }
-}
+# module "alb" {
+#   source = "../modules/aws/alb"
+#   env    = local.env
+#   cloud_pratica = {
+#     security_group_ids                 = [module.security_group.id_alb]
+#     subnet_ids                         = local.public_subnet_ids
+#     arn_target_group_slack_metrics_api = module.target_group.arn_slack_metrics_api
+#     slack_metrics_api_host             = local.slack_metrics_api_host
+#     arn_certificate                    = module.acm_cloud_pratica_com_ap_northeast_1.arn_certificate
+#   }
+# }
 
 module "s3" {
   source = "../modules/aws/s3"
@@ -216,15 +216,15 @@ module "route53" {
         zone_id                = module.cloudfront.zone_id_us_east_1
       }
     },
-    {
-      name = local.slack_metrics_api_host
-      type = "A"
-      alias = {
-        name                   = "dualstack.${module.alb.dns_name_cloud_pratica}"
-        evaluate_target_health = true
-        zone_id                = module.alb.zone_id_ap_northeast_1
-      }
-    },
+    # {
+    #   name = local.slack_metrics_api_host
+    #   type = "A"
+    #   alias = {
+    #     name                   = "dualstack.${module.alb.dns_name_cloud_pratica}"
+    #     evaluate_target_health = true
+    #     zone_id                = module.alb.zone_id_ap_northeast_1
+    #   }
+    # },
     {
       name   = module.acm_cloud_pratica_com_ap_northeast_1.validation_record_name
       values = [module.acm_cloud_pratica_com_ap_northeast_1.validation_record_value]
