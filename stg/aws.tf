@@ -66,10 +66,12 @@ module "iam_role" {
 #   env              = local.env
 #   public_subnet_id = module.subnet.id_public_subnet_1a
 #   bastion = {
+#     ami_id               = "ami-016675faa26f97391" // 踏み台サーバのAMI ID
 #     iam_instance_profile = module.iam_role.instance_profile_cp_bastion
 #     security_group_id    = module.security_group.id_bastion
 #   }
 #   nat_1a = {
+#     ami_id               = "ami-0e7d55a65016b3c18" // NATインスタンスのAMI ID
 #     iam_instance_profile = module.iam_role.instance_profile_cp_nat
 #     security_group_id    = module.security_group.id_nat
 #   }
