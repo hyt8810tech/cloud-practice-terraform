@@ -17,3 +17,7 @@ output "id_slack_metrics_backend" {
 output "id_alb" {
   value = aws_security_group.alb_cp.id
 }
+
+output "id_db_migrator" {
+  value = aws_security_group.db_migrator.id
+}

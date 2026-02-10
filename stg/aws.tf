@@ -239,3 +239,15 @@ module "route53" {
     dkim_tokens = module.ses.dkim_tokens_cloud_pratica
   }
 }
+
+module "parameter_store" {
+  source = "../modules/aws/parameter_store"
+  env    = local.env
+  private_subnet_id_1a = module.subnet.id_private_subnet_1a
+  private_subnet_id_1c = module.subnet.id_private_subnet_1c
+  s3_arn_cp_config = module.s3.arn_cp_config_bucket
+  aws_account_id = local.account_id
+  sg_id_slack_metrics_backend = module.security_group.id_slack_metrics_backend
+  sg_id_db_migrator = module.security_group.id_db_migrator
+  tg_arn_slack_metrics_api = module.target_group.arn_slack_metrics_api
+}
