@@ -251,3 +251,7 @@ module "parameter_store" {
   sg_id_db_migrator = module.security_group.id_db_migrator
   tg_arn_slack_metrics_api = module.target_group.arn_slack_metrics_api
 }
+
+module "oidc_github_actions" {
+  source = "../modules/aws/oidc_github_actions"
+}

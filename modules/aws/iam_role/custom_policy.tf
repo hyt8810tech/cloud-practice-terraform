@@ -2,7 +2,7 @@
 secrets-manager-read
 **********************************************************/
 resource "aws_iam_policy" "secrets_manager_read" {
-  description = "secrets-manager-readonly-${var.env}"
+  name = "secrets-manager-read-${var.env}"
   policy = jsonencode({
     Statement = [{
       Action = [
@@ -137,7 +137,6 @@ resource "aws_iam_policy" "lambda_invoke" {
 rds-start-stop
 **********************************************************/
 resource "aws_iam_policy" "rds_start_stop" {
-  description = null
   name        = "rds-start-stop-${var.env}"
   path        = "/"
   policy = jsonencode({
@@ -154,7 +153,6 @@ resource "aws_iam_policy" "rds_start_stop" {
 ec2-start-stop
 **********************************************************/
 resource "aws_iam_policy" "ec2_start_stop" {
-  description = null
   name        = "ec2-start-stop-${var.env}"
   path        = "/"
   policy = jsonencode({
@@ -171,7 +169,6 @@ resource "aws_iam_policy" "ec2_start_stop" {
 ecs-write
 **********************************************************/
 resource "aws_iam_policy" "ecs_write" {
-  description = null
   name        = "ecs-write-${var.env}"
   path        = "/"
   policy = jsonencode({
@@ -182,4 +179,21 @@ resource "aws_iam_policy" "ecs_write" {
     }]
     Version = "2012-10-17"
   })
+}
+
+/**********************************************************
+parameter-store-read-write
+**********************************************************/
+resource "aws_iam_policy" "parameter_store_read_write" {
+  name        = "parameter-store-read-write-${var.env}"
+  path        = "/"
+  policy = jsonencode({
+    Statement = [{
+      Action   = ["ssm:PutParameter", "ssm:GetParameter"]
+      Effect   = "Allow"
+      Resource = "*"
+    }]
+    Version = "2012-10-17"
+  })
+
 }

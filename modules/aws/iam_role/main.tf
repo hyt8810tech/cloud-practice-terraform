@@ -244,3 +244,41 @@ resource "aws_iam_role_policy_attachment" "administrator" {
   policy_arn = each.value
   role       = aws_iam_role.administrator.name
 }
+
+/**********************************************************
+cp-github-actions
+**********************************************************/
+resource "aws_iam_role" "cp_github_actions" {
+  assume_role_policy = jsonencode({
+    Statement = [{
+      Action = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringEquals = {
+          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+        }
+        StringLike = {
+          "token.actions.githubusercontent.com:sub" = ["repo:hyt8810tech/*", "repo:hyt8810tech/*"]
+        }
+      }
+      Effect = "Allow"
+      Principal = {
+        Federated = "arn:aws:iam::165115313503:oidc-provider/token.actions.githubusercontent.com"
+      }
+    }]
+    Version = "2012-10-17"
+  })
+  max_session_duration  = 3600
+  name                  = "cp-github-actions-${var.env}"
+  path                  = "/"
+}
+
+resource "aws_iam_role_policy_attachment" "cp_github_actions" {
+  for_each = {
+    ec2_container_registry_power_user = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+    ecs_full_access = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+    parameter_store_read_write = aws_iam_policy.parameter_store_read_write.arn
+    secrets_manager_read = aws_iam_policy.secrets_manager_read.arn
+  }
+  policy_arn = each.value
+  role       = aws_iam_role.cp_github_actions.name
+}
