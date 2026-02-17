@@ -71,6 +71,7 @@ module "route53_cloud_pratica_com" {
 module "iam_role" {
   source = "../modules/aws/iam_role"
   env    = local.env
+  aws_account_id = local.account_id
 }
 
 module "s3" {

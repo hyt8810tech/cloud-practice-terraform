@@ -59,8 +59,8 @@ module "ses" {
 module "iam_role" {
   source = "../modules/aws/iam_role"
   env    = local.env
+  aws_account_id = local.account_id
 }
-
 # module "ec2" {
 #   source           = "../modules/aws/ec2"
 #   env              = local.env

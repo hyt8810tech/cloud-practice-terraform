@@ -262,7 +262,7 @@ resource "aws_iam_role" "cp_github_actions" {
       }
       Effect = "Allow"
       Principal = {
-        Federated = "arn:aws:iam::165115313503:oidc-provider/token.actions.githubusercontent.com"
+        Federated = "arn:aws:iam::${var.aws_account_id}:oidc-provider/token.actions.githubusercontent.com"
       }
     }]
     Version = "2012-10-17"
