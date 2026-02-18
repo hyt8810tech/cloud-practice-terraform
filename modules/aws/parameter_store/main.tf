@@ -57,3 +57,12 @@ resource "aws_ssm_parameter" "ecspresso_tg_arn_slack_metrics_api" {
   type  = "String"
   value = var.tg_arn_slack_metrics_api
 }
+
+resource "aws_ssm_parameter" "slack_metrics" {
+  name  = "/slack-metrics-${var.env}"
+  type  = "String"
+  value = "default value"
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
