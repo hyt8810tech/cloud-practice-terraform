@@ -267,18 +267,45 @@ resource "aws_iam_role" "cp_github_actions" {
     }]
     Version = "2012-10-17"
   })
-  max_session_duration  = 3600
-  name                  = "cp-github-actions-${var.env}"
-  path                  = "/"
+  max_session_duration = 3600
+  name                 = "cp-github-actions-${var.env}"
+  path                 = "/"
 }
 
 resource "aws_iam_role_policy_attachment" "cp_github_actions" {
   for_each = {
     ec2_container_registry_power_user = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
-    ecs_full_access = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
-    parameter_store_read_write = aws_iam_policy.parameter_store_read_write.arn
-    secrets_manager_read = aws_iam_policy.secrets_manager_read.arn
+    ecs_full_access                   = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+    parameter_store_read_write        = aws_iam_policy.parameter_store_read_write.arn
+    secrets_manager_read              = aws_iam_policy.secrets_manager_read.arn
   }
   policy_arn = each.value
   role       = aws_iam_role.cp_github_actions.name
+}
+
+/**********************************************************
+cp-slack-metrics-lambda
+**********************************************************/
+resource "aws_iam_role" "slack_metrics_lambda" {
+  name = "cp-slack-metrics-lambda-${var.env}"
+  assume_role_policy = jsonencode({
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "lambda.amazonaws.com"
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "slack_metrics_lambda" {
+  for_each = {
+    cloudwatch           = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+    parameter_store_read = aws_iam_policy.parameter_store_read.arn
+    sqs                  = aws_iam_policy.sqs_read_write.arn
+    eni                  = "arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess"
+  }
+  policy_arn = each.value
+  role       = aws_iam_role.slack_metrics_lambda.name
 }

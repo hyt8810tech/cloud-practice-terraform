@@ -197,3 +197,20 @@ resource "aws_iam_policy" "parameter_store_read_write" {
   })
 
 }
+
+/**********************************************************
+parameter-store-read
+**********************************************************/
+resource "aws_iam_policy" "parameter_store_read" {
+  name        = "parameter-store-read-${var.env}"
+  path        = "/"
+  policy = jsonencode({
+    Statement = [{
+      Action   = ["ssm:GetParameter"]
+      Effect   = "Allow"
+      Resource = "*"
+    }]
+    Version = "2012-10-17"
+  })
+
+}
