@@ -21,3 +21,7 @@ output "id_alb" {
 output "id_db_migrator" {
   value = aws_security_group.db_migrator.id
 }
+
+output "id_slack_metrics_lambda" {
+  value = aws_security_group.slack_metrics_lambda.id
+}

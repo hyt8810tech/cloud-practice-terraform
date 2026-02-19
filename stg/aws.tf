@@ -22,7 +22,7 @@ module "route_table" {
   internet_gateway_id      = module.internet_gateway.id_cloud_pratica
   public_subnet_ids        = local.public_subnet_ids
   private_subnet_ids       = local.private_subnet_ids
-  #nat_network_interface_id = module.ec2.network_interface_id_nat_1a
+  nat_network_interface_id = module.ec2.network_interface_id_nat_1a
 }
 
 module "security_group" {
@@ -61,21 +61,21 @@ module "iam_role" {
   env    = local.env
   aws_account_id = local.account_id
 }
-# module "ec2" {
-#   source           = "../modules/aws/ec2"
-#   env              = local.env
-#   public_subnet_id = module.subnet.id_public_subnet_1a
-#   bastion = {
-#     ami_id               = "ami-016675faa26f97391" // 踏み台サーバのAMI ID
-#     iam_instance_profile = module.iam_role.instance_profile_cp_bastion
-#     security_group_id    = module.security_group.id_bastion
-#   }
-#   nat_1a = {
-#     ami_id               = "ami-0e7d55a65016b3c18" // NATインスタンスのAMI ID
-#     iam_instance_profile = module.iam_role.instance_profile_cp_nat
-#     security_group_id    = module.security_group.id_nat
-#   }
-# }
+module "ec2" {
+  source           = "../modules/aws/ec2"
+  env              = local.env
+  public_subnet_id = module.subnet.id_public_subnet_1a
+  bastion = {
+    ami_id               = "ami-016675faa26f97391" // 踏み台サーバのAMI ID
+    iam_instance_profile = module.iam_role.instance_profile_cp_bastion
+    security_group_id    = module.security_group.id_bastion
+  }
+  nat_1a = {
+    ami_id               = "ami-0e7d55a65016b3c18" // NATインスタンスのAMI ID
+    iam_instance_profile = module.iam_role.instance_profile_cp_nat
+    security_group_id    = module.security_group.id_nat
+  }
+}
 
 module "rds_cp" {
   env                  = local.env
@@ -160,8 +160,8 @@ module "event_bridge_scheduler" {
     enable       = true
     iam_role_arn = module.iam_role.role_arn_cp_scheduler_cost_cutter
     ec2_instance_ids = [
-      #module.ec2.id_nat_1a,
-      #module.ec2.id_bastion,
+      module.ec2.id_nat_1a,
+      module.ec2.id_bastion,
     ]
     ecs_cluster_arn_cloud_pratica_backend = module.ecs.ecs_cluster_arn_cloud_pratica_backend
   }
@@ -254,4 +254,15 @@ module "parameter_store" {
 
 module "oidc_github_actions" {
   source = "../modules/aws/oidc_github_actions"
+}
+
+module "lambda" {
+  source = "../modules/aws/lambda"
+  env    = local.env
+  private_subnet_ids = local.private_subnet_ids
+  slack_metrics = {
+    role_arn = module.iam_role.role_arn_slack_metrics_lambda
+    image_uri = "${module.ecr.url_slack_metrics}:dbac188"
+    security_group_id = module.security_group.id_slack_metrics_lambda
+  }
 }

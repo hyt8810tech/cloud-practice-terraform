@@ -296,6 +296,7 @@ resource "aws_iam_role" "slack_metrics_lambda" {
         Service = "lambda.amazonaws.com"
       }
     }]
+    Version = "2008-10-17"
   })
 }
 

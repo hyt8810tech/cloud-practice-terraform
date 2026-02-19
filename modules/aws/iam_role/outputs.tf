@@ -25,3 +25,7 @@ output "role_arn_cp_scheduler_slack_metrics" {
 output "role_arn_cp_scheduler_cost_cutter" {
   value = aws_iam_role.cp_scheduler_cost_cutter.arn
 }
+
+output "role_arn_slack_metrics_lambda" {
+  value = aws_iam_role.slack_metrics_lambda.arn
+}
