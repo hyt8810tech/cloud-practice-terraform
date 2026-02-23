@@ -13,6 +13,12 @@ variable "slack_metrics" {
     ecs_task_definition_arn_without_revision = string
   })
 }
+variable "slack_metrics_v3" {
+  type = object({
+    lambda_arn = string
+  })
+  default = null
+}
 variable "cost_cutter" {
   type = object({
     enable = bool

@@ -165,6 +165,9 @@ module "event_bridge_scheduler" {
     ]
     ecs_cluster_arn_cloud_pratica_backend = module.ecs.ecs_cluster_arn_cloud_pratica_backend
   }
+  slack_metrics_v3 = {
+    lambda_arn = module.lambda.arn_slack_metrics_batch
+  }
 }
 
 module "target_group" {
@@ -262,7 +265,8 @@ module "lambda" {
   private_subnet_ids = local.private_subnet_ids
   slack_metrics = {
     role_arn = module.iam_role.role_arn_slack_metrics_lambda
-    image_uri = "${module.ecr.url_slack_metrics}:dbac188"
+    image_uri = "${module.ecr.url_slack_metrics_lambda}:dbac188"
     security_group_id = module.security_group.id_slack_metrics_lambda
+    sqs_arn = module.sqs.arn_slack_metrics
   }
 }

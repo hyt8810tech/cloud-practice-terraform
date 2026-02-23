@@ -9,5 +9,6 @@ variable "slack_metrics" {
     role_arn = string
     image_uri = string
     security_group_id = string
+    sqs_arn = string
   })
 }
