@@ -31,6 +31,17 @@ resource "aws_lambda_function" "slack_metrics_api" {
     ignore_changes = [image_uri]
   }
 }
+
+// MEMO: API Gateway module作成後にパーミッションを付与する
+resource "aws_lambda_permission" "api_gateway_slack_metrics_api" {
+  count         = var.slack_metrics.api_gateway_id != null ? 1 : 0
+  action                 = "lambda:InvokeFunction"
+  function_name          = aws_lambda_function.slack_metrics_api.function_name
+  principal              = "apigateway.amazonaws.com"
+  source_arn             = "arn:aws:execute-api:ap-northeast-1:${var.aws_account_id}:${var.slack_metrics.api_gateway_id}/*/*/*" 
+  statement_id           = "d7e741c7-3943-5771-b900-914cdc27af96"
+}
+
 /**********************************************************
 slack-metrics-batch
 **********************************************************/
@@ -106,3 +117,4 @@ resource "aws_lambda_event_source_mapping" "slack_metrics_worker" {
   function_name    = aws_lambda_function.slack_metrics_worker.function_name
   region           = "ap-northeast-1"
 }
+

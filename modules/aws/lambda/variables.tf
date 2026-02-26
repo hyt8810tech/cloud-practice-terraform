@@ -10,5 +10,9 @@ variable "slack_metrics" {
     image_uri = string
     security_group_id = string
     sqs_arn = string
+    api_gateway_id = string
   })
+}
+variable "aws_account_id" {
+  type = string
 }

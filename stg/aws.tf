@@ -268,5 +268,29 @@ module "lambda" {
     image_uri = "${module.ecr.url_slack_metrics_lambda}:dbac188"
     security_group_id = module.security_group.id_slack_metrics_lambda
     sqs_arn = module.sqs.arn_slack_metrics
+    api_gateway_id    = module.api_gateway.id_slack_metrics
   }
+  aws_account_id = local.account_id
+}
+
+module "api_gateway" {
+  source = "../modules/aws/api_gateway"
+  env = local.env
+  slack_metrics = {
+    lambda_invoke_arn = module.lambda.invoke_arn_slack_metrics_api
+    domain_name = "sm-api-v4.${local.base_host}"
+    deploy_version = "5" // API Gatewayのデプロイを行う場合はこの値をインクリメントする
+    cognito_user_pool_arn = module.cognito.user_pool_arn_slack_metrics
+  }
+  main_certificate_arn = module.acm_cloud_pratica_com_ap_northeast_1.arn_certificate
+}
+
+module "cognito" {
+  source = "../modules/aws/cognito"
+  env = local.env
+}
+
+import {
+  to = module.api_gateway.aws_api_gateway_authorizer.cognito_slack_metrics
+  id = "f53r1ipngj/eh0gp1"
 }
