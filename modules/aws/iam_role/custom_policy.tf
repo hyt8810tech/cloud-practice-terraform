@@ -214,3 +214,18 @@ resource "aws_iam_policy" "parameter_store_read" {
   })
 
 }
+
+/**********************************************************
+db-connect-stg
+**********************************************************/
+resource "aws_iam_policy" "db_connect" {
+  name = "db-connect-${var.env}"
+  policy = jsonencode({
+    Statement =  [{
+            Action = ["rds-db:connect"]
+            Effect = "Allow"
+            Resource = "*"
+        }]
+    Version =  "2012-10-17"
+})
+}
