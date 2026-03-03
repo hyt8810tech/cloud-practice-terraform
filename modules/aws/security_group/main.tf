@@ -134,6 +134,7 @@ resource "aws_vpc_security_group_ingress_rule" "db" {
     aws_security_group.bastion.id,
     aws_security_group.db_migrator.id,
     aws_security_group.slack_metrics_lambda.id,
+    aws_security_group.rds_proxy.id
   ])
 
   from_port                    = 5432
