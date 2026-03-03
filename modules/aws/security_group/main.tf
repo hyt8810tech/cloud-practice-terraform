@@ -166,3 +166,35 @@ resource "aws_vpc_security_group_egress_rule" "slack_metrics_lambda" {
   ip_protocol       = "-1"
   security_group_id = aws_security_group.slack_metrics_lambda.id
 }
+
+
+/**********************************************************
+cp-rds-proxy-stg
+**********************************************************/
+
+resource "aws_security_group" "rds_proxy" {
+  description = "cp-rds-proxy-${var.env}"
+  name        = "cp-rds-proxy-${var.env}"
+  tags = {
+    Name = "cp-rds-proxy-${var.env}"
+  }
+  vpc_id = var.vpc_id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "rds_proxy" {
+  for_each = toset([
+    aws_security_group.slack_metrics_lambda.id
+  ])
+
+  from_port                    = 5432
+  ip_protocol                  = "tcp"
+  referenced_security_group_id = each.value
+  security_group_id            = aws_security_group.rds_proxy.id
+  to_port                      = 5432
+}
+
+resource "aws_vpc_security_group_egress_rule" "rds_proxy" {
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+  security_group_id = aws_security_group.rds_proxy.id
+}
