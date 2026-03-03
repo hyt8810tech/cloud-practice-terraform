@@ -289,8 +289,3 @@ module "cognito" {
   source = "../modules/aws/cognito"
   env = local.env
 }
-
-import {
-  to = module.api_gateway.aws_api_gateway_authorizer.cognito_slack_metrics
-  id = "f53r1ipngj/eh0gp1"
-}
