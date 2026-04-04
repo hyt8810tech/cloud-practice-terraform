@@ -306,7 +306,7 @@ resource "aws_iam_role_policy_attachment" "slack_metrics_lambda" {
     parameter_store_read = aws_iam_policy.parameter_store_read.arn
     sqs                  = aws_iam_policy.sqs_read_write.arn
     eni                  = "arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess"
-    db_connect = aws_iam_policy.db_connect.arn
+    db_connect           = aws_iam_policy.db_connect.arn
   }
   policy_arn = each.value
   role       = aws_iam_role.slack_metrics_lambda.name
@@ -315,20 +315,20 @@ resource "aws_iam_role_policy_attachment" "slack_metrics_lambda" {
 /**********************************************************
 cp-rds-proxy-stg
 **********************************************************/
-resource "aws_iam_role" "rds-proxy" {
+resource "aws_iam_role" "rds_proxy" {
   name = "cp-rds-proxy-${var.env}"
   assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "rds.amazonaws.com"
-            },
-            "Action": "sts:AssumeRole"
-        }
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "rds.amazonaws.com"
+        },
+        "Action" : "sts:AssumeRole"
+      }
     ]
-})
+  })
   tags = {
     Name = "cp-rds-proxy-${var.env}"
   }
@@ -339,8 +339,8 @@ resource "aws_iam_role" "rds-proxy" {
 
 resource "aws_iam_role_policy_attachment" "rds_proxy" {
   for_each = {
-    secrets_manager_read              = aws_iam_policy.secrets_manager_read.arn
+    secrets_manager_read = aws_iam_policy.secrets_manager_read.arn
   }
   policy_arn = each.value
-  role       = aws_iam_role.rds-proxy.id
+  role       = aws_iam_role.rds_proxy.id
 }

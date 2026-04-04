@@ -40,6 +40,7 @@ module "ecr" {
 module "secrets_manager" {
   source = "../modules/aws/secrets_manager"
   env    = local.env
+  enable_db_slack_metrics = false
 }
 
 module "sqs" {
@@ -57,8 +58,8 @@ module "ses" {
 }
 
 module "iam_role" {
-  source = "../modules/aws/iam_role"
-  env    = local.env
+  source         = "../modules/aws/iam_role"
+  env            = local.env
   aws_account_id = local.account_id
 }
 module "ec2" {
@@ -244,15 +245,15 @@ module "route53" {
 }
 
 module "parameter_store" {
-  source = "../modules/aws/parameter_store"
-  env    = local.env
-  private_subnet_id_1a = module.subnet.id_private_subnet_1a
-  private_subnet_id_1c = module.subnet.id_private_subnet_1c
-  s3_arn_cp_config = module.s3.arn_cp_config_bucket
-  aws_account_id = local.account_id
+  source                      = "../modules/aws/parameter_store"
+  env                         = local.env
+  private_subnet_id_1a        = module.subnet.id_private_subnet_1a
+  private_subnet_id_1c        = module.subnet.id_private_subnet_1c
+  s3_arn_cp_config            = module.s3.arn_cp_config_bucket
+  aws_account_id              = local.account_id
   sg_id_slack_metrics_backend = module.security_group.id_slack_metrics_backend
-  sg_id_db_migrator = module.security_group.id_db_migrator
-  tg_arn_slack_metrics_api = module.target_group.arn_slack_metrics_api
+  sg_id_db_migrator           = module.security_group.id_db_migrator
+  tg_arn_slack_metrics_api    = module.target_group.arn_slack_metrics_api
 }
 
 module "oidc_github_actions" {
@@ -260,14 +261,14 @@ module "oidc_github_actions" {
 }
 
 module "lambda" {
-  source = "../modules/aws/lambda"
-  env    = local.env
+  source             = "../modules/aws/lambda"
+  env                = local.env
   private_subnet_ids = local.private_subnet_ids
   slack_metrics = {
-    role_arn = module.iam_role.role_arn_slack_metrics_lambda
-    image_uri = "${module.ecr.url_slack_metrics_lambda}:dbac188"
+    role_arn          = module.iam_role.role_arn_slack_metrics_lambda
+    image_uri         = "${module.ecr.url_slack_metrics_lambda}:dbac188"
     security_group_id = module.security_group.id_slack_metrics_lambda
-    sqs_arn = module.sqs.arn_slack_metrics
+    sqs_arn           = module.sqs.arn_slack_metrics
     api_gateway_id    = module.api_gateway.id_slack_metrics
   }
   aws_account_id = local.account_id
@@ -275,11 +276,11 @@ module "lambda" {
 
 module "api_gateway" {
   source = "../modules/aws/api_gateway"
-  env = local.env
+  env    = local.env
   slack_metrics = {
-    lambda_invoke_arn = module.lambda.invoke_arn_slack_metrics_api
-    domain_name = "sm-api-v4.${local.base_host}"
-    deploy_version = "5" // API Gatewayのデプロイを行う場合はこの値をインクリメントする
+    lambda_invoke_arn     = module.lambda.invoke_arn_slack_metrics_api
+    domain_name           = "sm-api-v4.${local.base_host}"
+    deploy_version        = "5" // API Gatewayのデプロイを行う場合はこの値をインクリメントする
     cognito_user_pool_arn = module.cognito.user_pool_arn_slack_metrics
   }
   main_certificate_arn = module.acm_cloud_pratica_com_ap_northeast_1.arn_certificate
@@ -287,5 +288,17 @@ module "api_gateway" {
 
 module "cognito" {
   source = "../modules/aws/cognito"
-  env = local.env
+  env    = local.env
 }
+
+# コスト削減のためコメントアウト
+# module "rds_proxy" {
+#   source = "../modules/aws/rds_proxy"
+#   env    = local.env
+#   cloud_pratica = {
+#     iam_role_arn        = module.iam_role.role_arn_cp_rds_proxy
+#     security_group_id   = module.security_group.id_cp_rds_proxy
+#     private_subnet_ids  = local.private_subnet_ids
+#     secrets_manager_arn = module.secrets_manager.arn_db_slack_metrics
+#   }
+# }

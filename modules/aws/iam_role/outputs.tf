@@ -29,3 +29,7 @@ output "role_arn_cp_scheduler_cost_cutter" {
 output "role_arn_slack_metrics_lambda" {
   value = aws_iam_role.slack_metrics_lambda.arn
 }
+
+output "role_arn_cp_rds_proxy" {
+  value = aws_iam_role.rds_proxy.arn
+}
