@@ -280,7 +280,7 @@ module "api_gateway" {
   slack_metrics = {
     lambda_invoke_arn     = module.lambda.invoke_arn_slack_metrics_api
     domain_name           = "sm-api-v4.${local.base_host}"
-    deploy_version        = "5" // API Gatewayのデプロイを行う場合はこの値をインクリメントする
+    deploy_version        = "6" // API Gatewayのデプロイを行う場合はこの値をインクリメントする
     cognito_user_pool_arn = module.cognito.user_pool_arn_slack_metrics
   }
   main_certificate_arn = module.acm_cloud_pratica_com_ap_northeast_1.arn_certificate

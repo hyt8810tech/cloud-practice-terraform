@@ -18,8 +18,9 @@ resource "aws_api_gateway_resource" "slack_metrics_root" {
 // メソッド: ANY /{proxy+}
 resource "aws_api_gateway_method" "slack_metrics_root_any" {
   api_key_required = false
-  authorization    = "COGNITO_USER_POOLS"
-  authorizer_id    = "eh0gp1"
+  #authorization    = "COGNITO_USER_POOLS"
+  authorization = "NONE"
+  authorizer_id    = aws_api_gateway_authorizer.cognito_slack_metrics.id
   http_method      = "ANY"
   request_parameters = {
     "method.request.path.proxy" = true
