@@ -83,7 +83,7 @@ module "rds_cp" {
   source               = "../modules/aws/rds_unit"
   identifier           = "cloud-pratica-${local.env}"
   db_name              = "slack_metrics"
-  engine_version       = "16.8"
+  engine_version       = "16.13"
   instance_class       = "db.t3.micro"
   security_group_ids   = [module.security_group.id_db]
   private_subnet_ids   = local.private_subnet_ids

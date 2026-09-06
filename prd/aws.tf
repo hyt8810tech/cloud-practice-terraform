@@ -69,8 +69,8 @@ module "route53_cloud_pratica_com" {
 }
 
 module "iam_role" {
-  source = "../modules/aws/iam_role"
-  env    = local.env
+  source         = "../modules/aws/iam_role"
+  env            = local.env
   aws_account_id = local.account_id
 }
 
@@ -143,7 +143,7 @@ module "rds_cp" {
   source               = "../modules/aws/rds_unit"
   identifier           = "cloud-pratica-${local.env}"
   db_name              = "slack_metrics"
-  engine_version       = "16.8"
+  engine_version       = "16.13"
   instance_class       = "db.t3.micro"
   security_group_ids   = [module.security_group.id_db]
   private_subnet_ids   = local.private_subnet_ids
@@ -242,15 +242,15 @@ module "cloudfront" {
 }
 
 module "parameter_store" {
-  source = "../modules/aws/parameter_store"
-  env    = local.env
-  private_subnet_id_1a = module.subnet.id_private_subnet_1a
-  private_subnet_id_1c = module.subnet.id_private_subnet_1c
-  s3_arn_cp_config = module.s3.arn_cp_config_bucket
-  aws_account_id = local.account_id
+  source                      = "../modules/aws/parameter_store"
+  env                         = local.env
+  private_subnet_id_1a        = module.subnet.id_private_subnet_1a
+  private_subnet_id_1c        = module.subnet.id_private_subnet_1c
+  s3_arn_cp_config            = module.s3.arn_cp_config_bucket
+  aws_account_id              = local.account_id
   sg_id_slack_metrics_backend = module.security_group.id_slack_metrics_backend
-  sg_id_db_migrator = module.security_group.id_db_migrator
-  tg_arn_slack_metrics_api = module.target_group.arn_slack_metrics_api
+  sg_id_db_migrator           = module.security_group.id_db_migrator
+  tg_arn_slack_metrics_api    = module.target_group.arn_slack_metrics_api
 }
 
 module "oidc_github_actions" {
