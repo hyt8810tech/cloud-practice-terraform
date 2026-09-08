@@ -87,5 +87,5 @@ API Gateway経由でLambdaを呼び出すサーバーレス構成。ECS構成と
 
 ## Terraform設計
 
-- **Module設計：** stg/prd環境間で差分のある値（インスタンスサイズ、ドメイン名等）は変数化し、共通のTerraform moduleをstg/prd両環境で使い回せる設計とした
+- **Module設計：** AWSアカウントID・ドメイン名等、stg/prd環境間で差分のある値を変数化。共通のTerraform moduleをstg/prd両環境で使い回せる設計とした
 
